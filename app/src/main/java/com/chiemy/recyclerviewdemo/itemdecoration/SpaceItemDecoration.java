@@ -1,4 +1,4 @@
-package com.chiemy.recyclerviewdemo;
+package com.chiemy.recyclerviewdemo.itemdecoration;
 
 /**
  * Created by chiemy on 15/11/17.

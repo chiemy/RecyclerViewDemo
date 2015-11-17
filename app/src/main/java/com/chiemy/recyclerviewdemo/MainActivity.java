@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         adapter = new MyAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, R.drawable.list_divider, false, false));
+        // recyclerView.addItemDecoration(new DividerItemDecoration(this, R.drawable.list_divider, false, false));
         // recyclerView.addItemDecoration(new SpaceItemDecoration(this, R.dimen.activity_vertical_margin));
 
     }
@@ -86,9 +87,11 @@ public class MainActivity extends AppCompatActivity {
 
     private static class ItemViewHolder extends RecyclerView.ViewHolder {
         private TextView tv;
+        private CardView cardView;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
+            cardView = (CardView) itemView.findViewById(R.id.card_view);
             tv = (TextView) itemView.findViewById(R.id.tv_text);
         }
     }
@@ -144,6 +147,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void removeItem(boolean anim){
+        if(datas.isEmpty()){
+            return;
+        }
         datas.remove(0);
         if (anim){
             adapter.notifyItemRemoved(0);

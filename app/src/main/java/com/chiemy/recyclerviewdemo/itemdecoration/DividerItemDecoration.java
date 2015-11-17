@@ -1,4 +1,4 @@
-package com.chiemy.recyclerviewdemo;
+package com.chiemy.recyclerviewdemo.itemdecoration;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;

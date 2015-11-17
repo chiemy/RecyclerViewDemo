@@ -16,8 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
-    private static final String [] DATAS = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"};
+    private static List<String> DATAS;
+    private static final int DATASET_COUNT = 7;
+    private MyAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,10 +109,46 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_add) {
+            addItem(false);
+            return true;
+        } else if (id == R.id.action_remove) {
+            removeItem(false);
+            return true;
+        } else if (id == R.id.action_add_with_anim) {
+            addItem(true);
+            return true;
+        } else if (id == R.id.action_remove_with_anim) {
+            removeItem(true);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void addItem(boolean anim){
+        int index = DATAS.size() - DATASET_COUNT;
+        String text;
+        if (index < 0) {
+            index = Math.abs(index) - 1;
+            text = "This is element #" + index;
+        } else {
+            text = "This is element #new " + index;
+        }
+        DATAS.add(0, text);
+        if (anim){
+            adapter.notifyItemInserted(0);
+        }else{
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    private void removeItem(boolean anim){
+        DATAS.remove(0);
+        if (anim){
+            adapter.notifyItemRemoved(0);
+        } else {
+            adapter.notifyDataSetChanged();
+        }
     }
 }

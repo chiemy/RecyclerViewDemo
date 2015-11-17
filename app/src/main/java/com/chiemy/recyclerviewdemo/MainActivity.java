@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private static List<String> DATAS;
+    private static List<String> datas;
     private static final int DATASET_COUNT = 7;
     private MyAdapter adapter;
 
@@ -52,9 +52,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initDataset() {
-        DATAS = new ArrayList<>(DATASET_COUNT);
+        datas = new ArrayList<>(DATASET_COUNT);
         for (int i = 0; i < DATASET_COUNT; i++) {
-            DATAS.add("This is element #" + i);
+            datas.add("This is element #" + i);
         }
     }
 
@@ -73,13 +73,13 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(ItemViewHolder holder, int position) {
-            holder.tv.setText(DATAS.get(position));
+            holder.tv.setText(datas.get(position));
             holder.itemView.setTag(position);
         }
 
         @Override
         public int getItemCount() {
-            return DATAS.size();
+            return datas.size();
         }
 
     }
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addItem(boolean anim){
-        int index = DATAS.size() - DATASET_COUNT;
+        int index = datas.size() - DATASET_COUNT;
         String text;
         if (index < 0) {
             index = Math.abs(index) - 1;
@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             text = "This is element #new " + index;
         }
-        DATAS.add(0, text);
+        datas.add(0, text);
         if (anim){
             adapter.notifyItemInserted(0);
         }else{
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void removeItem(boolean anim){
-        DATAS.remove(0);
+        datas.remove(0);
         if (anim){
             adapter.notifyItemRemoved(0);
         } else {

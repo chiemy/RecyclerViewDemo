@@ -35,39 +35,53 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        initDataset();
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(new MyAdapter(this));
+        adapter = new MyAdapter(this);
+        recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, R.drawable.list_divider, false, false));
+        // recyclerView.addItemDecoration(new SpaceItemDecoration(this, R.dimen.activity_vertical_margin));
+
     }
 
-    private static class MyAdapter extends RecyclerView.Adapter<ItemViewHolder>{
+    private void initDataset() {
+        DATAS = new ArrayList<>(DATASET_COUNT);
+        for (int i = 0; i < DATASET_COUNT; i++) {
+            DATAS.add("This is element #" + i);
+        }
+    }
+
+    private static class MyAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         private LayoutInflater inflater;
-        public MyAdapter(Context context){
+
+        public MyAdapter(Context context) {
             inflater = LayoutInflater.from(context);
 
         }
 
         @Override
         public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new ItemViewHolder(inflater.inflate(R.layout.item_list_test, null));
+            return new ItemViewHolder(inflater.inflate(R.layout.item_list_test, parent, false));
         }
 
         @Override
         public void onBindViewHolder(ItemViewHolder holder, int position) {
-            holder.tv.setText(DATAS[position]);
+            holder.tv.setText(DATAS.get(position));
             holder.itemView.setTag(position);
         }
 
         @Override
         public int getItemCount() {
-            return DATAS.length;
+            return DATAS.size();
         }
 
     }
 
-    private static class ItemViewHolder extends RecyclerView.ViewHolder{
+    private static class ItemViewHolder extends RecyclerView.ViewHolder {
         private TextView tv;
+
         public ItemViewHolder(View itemView) {
             super(itemView);
             tv = (TextView) itemView.findViewById(R.id.tv_text);

@@ -30,6 +30,10 @@ public class SlideAlphaItemAnimator extends SimpleItemAnimator{
     private ArrayList<MoveInfo> mPendingMoveHolders = new ArrayList<>();
     private ArrayList<MoveInfo> mMoveAnimtions = new ArrayList<>();
 
+    private static final long DEFUALT_DURATION = 300;
+    private static final float MAX_ALPHA = 1.f;
+    private static final float MIN_ALPHA = 0.f;
+
     @Override
     public boolean animateRemove(RecyclerView.ViewHolder holder) {
         mPendingRemoveHolders.add(holder);
@@ -38,7 +42,7 @@ public class SlideAlphaItemAnimator extends SimpleItemAnimator{
 
     @Override
     public boolean animateAdd(RecyclerView.ViewHolder holder) {
-        ViewCompat.setAlpha(holder.itemView, 0.f);
+        ViewCompat.setAlpha(holder.itemView, MIN_ALPHA);
         mPendingAddHolders.add(holder);
         return true;
     }
@@ -119,7 +123,7 @@ public class SlideAlphaItemAnimator extends SimpleItemAnimator{
     private void animateAddImpl(final RecyclerView.ViewHolder holder) {
         mAddAnimtions.add(holder);
         final View item = holder.itemView;
-        playAnimatorSet(item, 300, 0.f, 1.f, item.getHeight(), item.getTranslationY(),
+        playAnimatorSet(item, DEFUALT_DURATION, MIN_ALPHA, MAX_ALPHA, item.getHeight(), item.getTranslationY(),
                 new DecelerateInterpolator(), new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
@@ -128,7 +132,7 @@ public class SlideAlphaItemAnimator extends SimpleItemAnimator{
 
             @Override
             public void onAnimationCancel(Animator animation) {
-                item.setAlpha(1.f);
+                item.setAlpha(MAX_ALPHA);
             }
 
             @Override
@@ -146,7 +150,7 @@ public class SlideAlphaItemAnimator extends SimpleItemAnimator{
     private void animateRemoveImpl(final RecyclerView.ViewHolder holder) {
         mRemoveAnimations.add(holder);
         final View item = holder.itemView;
-        playAnimatorSet(item, 300, 1.f, 0.f, item.getTranslationY(), item.getHeight(),
+        playAnimatorSet(item, DEFUALT_DURATION, MAX_ALPHA, MIN_ALPHA, item.getTranslationY(), item.getHeight(),
                 new AccelerateInterpolator(), new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationStart(Animator animation) {
@@ -156,7 +160,7 @@ public class SlideAlphaItemAnimator extends SimpleItemAnimator{
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         mRemoveAnimations.remove(holder);
-                        item.setAlpha(1.f);
+                        item.setAlpha(MAX_ALPHA);
                         dispatchRemoveFinished(holder);
                         if (!isRunning()) {
                             dispatchAnimationsFinished();
@@ -195,7 +199,7 @@ public class SlideAlphaItemAnimator extends SimpleItemAnimator{
     private void animateMoveImpl(final MoveInfo info) {
         mMoveAnimtions.remove(info);
         final View view = info.holder.itemView;
-        Animator animator = getTranslateYAnimator(view, 300, view.getTranslationY(), 0);
+        Animator animator = getTranslateYAnimator(view, DEFUALT_DURATION, view.getTranslationY(), 0);
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
@@ -212,6 +216,15 @@ public class SlideAlphaItemAnimator extends SimpleItemAnimator{
             }
         });
         animator.start();
+    }
+
+    private ItemAnimatorListener animatorListener;
+    public void setAnimatorListener(ItemAnimatorListener animatorListener) {
+        this.animatorListener = animatorListener;
+    }
+
+    public interface ItemAnimatorListener {
+        void onAnimationFinished(int type);
     }
 
     class MoveInfo {
